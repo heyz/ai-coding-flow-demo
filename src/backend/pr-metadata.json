@@ -1,0 +1,9 @@
+{
+  "branch_name": "feature/implement-user-management",
+  "pr_title": "feat: 实现用户管理模块",
+  "pr_summary": "Closes #1\n\n## 概述\n\n实现用户管理模块，包含：\n- 创建 SysUser 实体对应 sys_user 表\n- 提供完整的 CRUD 接口\n- 支持分页查询和关键词搜索\n\n### 实体字段\n- Id: 主键自增\n- RealName: 真实姓名\n- Nickname: 昵称  \n- Gender: 性别 (0-未知, 1-男, 2-女)\n- BirthDate: 出生年月\n- CreatedTime: 创建时间\n\n### API 接口\n- `GET /SysUser/list` - 分页查询列表\n- `GET /SysUser/{id}` - 获取详情\n- `POST /SysUser` - 创建用户\n- `PUT /SysUser/{id}` - 更新用户\n- `DELETE /SysUser/{id}` - 删除用户\n\n构建成功，数据库建表SQL已提供在实现摘要中。",
+  "intended_files": [
+    "src/backend/SJ.BackEnd.Template.Model/Entities/SysUser.cs",
+    "src/backend/SJ.BackEnd.Template.WebAPI/Controllers/SysUserController.cs"
+  ]
+}

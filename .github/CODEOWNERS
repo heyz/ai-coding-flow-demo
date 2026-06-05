@@ -1,0 +1,15 @@
+# Syntax follows CODEOWNERS conventions: later rules take precedence.
+# GitHub may request code owner review when branch protection requires it.
+
+# Project root and documentation
+* @heyz
+
+# Backend .NET solution and projects
+/src/backend/ @heyz
+
+# GitHub workflows and configuration
+.github/ @heyz
+
+# Claude CLI configuration and skills
+.claude/ @heyz
+.agents/ @heyz
