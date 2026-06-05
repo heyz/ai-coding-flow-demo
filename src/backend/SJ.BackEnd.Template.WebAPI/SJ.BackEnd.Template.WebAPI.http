@@ -1,0 +1,6 @@
+@SJ.BackEnd.Template.WebAPI_HostAddress = http://localhost:5123
+
+GET {{SJ.BackEnd.Template.WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

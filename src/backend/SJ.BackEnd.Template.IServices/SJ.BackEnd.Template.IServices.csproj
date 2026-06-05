@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SJ.BackEnd.Template.Common\SJ.BackEnd.Template.Common.csproj" />
+    <ProjectReference Include="..\SJ.BackEnd.Template.Model\SJ.BackEnd.Template.Model.csproj" />
+  </ItemGroup>
+
+</Project>

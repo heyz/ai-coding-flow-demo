@@ -1,0 +1,186 @@
+# .NET/.gitignore
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## Visual Studio files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.pidb
+*.sdf
+*.ipch
+*.aps
+*.ncb
+*.opt
+*.pln
+*.cache
+*.tlog
+*.lastcodeanalysissucceeded
+*.codeanalysislog
+*.unsuccessfulbuild
+
+## Visual Studio Code
+.vscode/
+
+## JetBrains Rider
+.idea/
+*.sln.iml
+
+## MonoDevelop/Xamarin Studio
+*.pidb
+*.userprefs
+
+## Build results of an uncertain nature
+[Bb]uild/
+*_i.c
+*_p.c
+*_i.h
+*.ilk
+*.meta
+*.obj
+*.iobj
+*.pch
+*.pdb
+*.ipdb
+*.lib
+*.exp
+*.idb
+*.rep
+*.xr.xml
+*.cache
+*.can
+*.catalog
+*.lastbuildstate
+*.tlb
+
+## Test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+## NuGet Packages
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+
+## NuGet package restore
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+## StyleCop
+StyleCopReport.xml
+
+## Files built by Visual Studio
+*_i.c
+*_p.c
+*_i.h
+*.ilk
+*.meta
+*.obj
+*.iobj
+*.pch
+*.pdb
+*.ipdb
+*.lib
+*.exp
+*.idb
+*.rep
+*.xr.xml
+*.cache
+*.can
+*.catalog
+*.lastbuildstate
+*.tlb
+
+## MSTest test results
+TestResults/
+
+## NCrunch
+*.ncrunchproject
+.*crunch*.local.xml
+nCrunchTemp_*
+
+## MightyMoose
+*.mm.*
+AutoTest.Net/
+
+## Web workbench (Sass/Compass)
+.sass-cache/
+
+## Installshield output folder
+[Ee]xpress/
+
+## DocProject
+DocProject/buildhelp/
+DocProject/Help/*.HxT
+DocProject/Help/*.HxC
+DocProject/Help/*.hhc
+DocProject/Help/*.hhk
+DocProject/Help/*.hhp
+DocProject/Help/Html2
+DocProject/Help/html
+
+## Click-Once directory
+publish/
+
+## Publish web output
+*.[Pp]ublish.xml
+*.azurePubxml
+*.pubxml
+*.publishproj
+
+## Microsoft Azure Web App publish settings
+PublishScripts/
+
+## Local configuration file for SDK
+LocalSettings.settings
+
+## ANTLR
+*.g4
+
+## User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+## Folder config file
+Desktop.ini
+
+## Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+## Mac files
+.DS_Store
+
+## Backup files
+*.bak
+*.backup
+
+
+**/node_modules
+.opencode/
+nul

@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="index.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="index.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="Autofac.Extras.DynamicProxy" Version="7.1.0" />
+	  <!--<PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
+    <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+    <PackageReference Include="Serilog.Formatting.Compact" Version="3.0.0" />
+    <PackageReference Include="Serilog.Sinks.Seq" Version="8.0.0" />
+    <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="10.0.0" />-->
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- 编译时只依赖接口层 -->
+    <ProjectReference Include="..\SJ.BackEnd.Template.Extensions\SJ.BackEnd.Template.Extensions.csproj" />
+    <ProjectReference Include="..\SJ.BackEnd.Template.IRepository\SJ.BackEnd.Template.IRepository.csproj" />
+    <ProjectReference Include="..\SJ.BackEnd.Template.IServices\SJ.BackEnd.Template.IServices.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="logs\" />
+  </ItemGroup>
+
+  <!--
+    实现层：编译时不可见（开发者只能使用接口），运行时由 Autofac Module 自动扫描注册。
+    通过 Build Target 将实现层输出（含传递依赖）复制到 WebAPI 输出目录。
+  -->
+  <Target Name="CopyImplementationAssemblies" AfterTargets="Build">
+    <PropertyGroup>
+      <ImplOutputPath>..\SJ.BackEnd.Template.Services\bin\$(Configuration)\$(TargetFramework)</ImplOutputPath>
+      <ImplOutputPath2>..\SJ.BackEnd.Template.Repository\bin\$(Configuration)\$(TargetFramework)</ImplOutputPath2>
+    </PropertyGroup>
+    <ItemGroup>
+      <ImplFiles Include="$(ImplOutputPath)\*.dll" />
+      <ImplFiles2 Include="$(ImplOutputPath2)\*.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(ImplFiles)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(ImplFiles2)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
+  </Target>
+
+</Project>

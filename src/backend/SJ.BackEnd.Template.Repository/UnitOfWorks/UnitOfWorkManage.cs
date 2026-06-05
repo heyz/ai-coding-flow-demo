@@ -1,0 +1,174 @@
+﻿#region  <<版本注释>>
+/* ==============================================================================
+// <copyright file="UnitOfWorkManage.cs" company="Shiji.BO.CS">
+// Copyright (c) SJ.BO.CS. All rights reserved.
+// </copyright>
+* 功能描述：UnitOfWorkManage
+* 创 建 者：何应芝
+* 创建时间：2026/5/25 15:46:34
+* ==============================================================================*/
+#endregion
+
+
+namespace SJ.BackEnd.Template.Repository;
+
+public class UnitOfWorkManage : IUnitOfWorkManage
+{
+    private readonly ILogger<UnitOfWorkManage> _logger;
+    private readonly ISqlSugarClient _sqlSugarClient;
+    
+
+    private int _tranCount { get; set; }
+    public int TranCount => _tranCount;
+    public readonly ConcurrentStack<string> TranStack = new();
+
+    public UnitOfWorkManage(ISqlSugarClient sqlSugarClient, ILogger<UnitOfWorkManage> logger)
+    {
+        _sqlSugarClient = sqlSugarClient;
+        _logger = logger;
+        _tranCount = 0;
+    }
+
+    /// <summary>
+    /// 获取DB，保证唯一性
+    /// </summary>
+    /// <returns></returns>
+    public SqlSugarScope GetDbClient()
+    {
+        // 必须要as，后边会用到切换数据库操作
+        return _sqlSugarClient as SqlSugarScope;
+    }
+
+
+    public UnitOfWork CreateUnitOfWork()
+    {
+        UnitOfWork uow = new()
+        {
+            Logger = _logger,
+            Db = _sqlSugarClient,
+            Tenant = (ITenant)_sqlSugarClient,
+            IsTran = true
+        };
+
+        uow.Db.Open();
+        uow.Tenant.BeginTran();
+        _logger.LogDebug("UnitOfWork Begin");
+        return uow;
+    }
+
+    public void BeginTran()
+    {
+        Console.WriteLine("Begin Transaction Before:" + GetDbClient().ContextID);
+        lock (this)
+        {
+            _tranCount++;
+            GetDbClient().BeginTran();
+        }
+        Console.WriteLine("Begin Transaction After:" + GetDbClient().ContextID);
+    }
+
+    public void BeginTran(MethodInfo method)
+    {
+        Console.WriteLine("Begin Transaction Before:" + GetDbClient().ContextID);
+        lock (this)
+        {
+            GetDbClient().BeginTran();
+            TranStack.Push(method.GetFullName());
+            _tranCount = TranStack.Count;
+        }
+        Console.WriteLine("Begin Transaction After:" + GetDbClient().ContextID);
+    }
+
+    public void CommitTran()
+    {
+        lock (this)
+        {
+            _tranCount--;
+            if (_tranCount == 0)
+            {
+                try
+                {
+                    GetDbClient().CommitTran();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    GetDbClient().RollbackTran();
+                }
+            }
+        }
+    }
+
+    public void CommitTran(MethodInfo method)
+    {
+        lock (this)
+        {
+            string result = "";
+            while (!TranStack.IsEmpty && !TranStack.TryPeek(out result))
+            {
+                Thread.Sleep(1);
+            }
+
+
+            if (result == method.GetFullName())
+            {
+                try
+                {
+                    GetDbClient().CommitTran();
+
+                    _logger.LogDebug($"Commit Transaction");
+                    Console.WriteLine($"Commit Transaction");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    GetDbClient().RollbackTran();
+                    _logger.LogDebug($"Commit Error , Rollback Transaction");
+                }
+                finally
+                {
+                    while (!TranStack.TryPop(out _))
+                    {
+                        Thread.Sleep(1);
+                    }
+
+                    _tranCount = TranStack.Count;
+                }
+            }
+        }
+    }
+
+    public void RollbackTran()
+    {
+        lock (this)
+        {
+            _tranCount--;
+            GetDbClient().RollbackTran();
+        }
+    }
+
+    public void RollbackTran(MethodInfo method)
+    {
+        lock (this)
+        {
+            string result = "";
+            while (!TranStack.IsEmpty && !TranStack.TryPeek(out result))
+            {
+                Thread.Sleep(1);
+            }
+
+            if (result == method.GetFullName())
+            {
+                GetDbClient().RollbackTran();
+                _logger.LogDebug($"Rollback Transaction");
+                Console.WriteLine($"Rollback Transaction");
+                while (!TranStack.TryPop(out _))
+                {
+                    Thread.Sleep(1);
+                }
+
+                _tranCount = TranStack.Count;
+            }
+        }
+    }
+}
