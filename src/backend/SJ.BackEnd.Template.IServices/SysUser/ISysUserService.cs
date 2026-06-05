@@ -13,7 +13,7 @@ using SJ.BackEnd.Template.Model;
 
 namespace SJ.BackEnd.Template.IServices;
 
-public interface ISysUserService
+public interface ISysUserService : IBaseServices<SysUser>
 {
     /// <summary>
     /// 分页查询用户列表
@@ -23,13 +23,6 @@ public interface ISysUserService
     /// <param name="keyword">搜索关键词（真实姓名/昵称）</param>
     /// <returns>分页结果</returns>
     Task<PageModel<SysUser>> GetPagedList(int pageIndex, int pageSize, string? keyword);
-
-    /// <summary>
-    /// 根据ID获取用户详情
-    /// </summary>
-    /// <param name="id">用户ID</param>
-    /// <returns>用户信息</returns>
-    Task<SysUser> GetById(long id);
 
     /// <summary>
     /// 创建用户

@@ -9,17 +9,15 @@
 * ==============================================================================*/
 #endregion
 
+using SJ.BackEnd.Template.IServices;
 using SJ.BackEnd.Template.Model;
 
 namespace SJ.BackEnd.Template.Services;
 
-public class SysUserService : ISysUserService
+public class SysUserService : BaseServices<SysUser>, ISysUserService
 {
-    private readonly IBaseServices<SysUser> _userServices;
-
-    public SysUserService(IBaseServices<SysUser> userServices)
+    public SysUserService(IBaseRepository<SysUser> repository) : base(repository)
     {
-        _userServices = userServices;
     }
 
     public async Task<PageModel<SysUser>> GetPagedList(int pageIndex, int pageSize, string? keyword)
@@ -32,29 +30,24 @@ public class SysUserService : ISysUserService
         }
 
         string orderByFields = "Id desc";
-        return await _userServices.GetPagedListByExpression(whereExpression, pageIndex, pageSize, orderByFields);
-    }
-
-    public async Task<SysUser> GetById(long id)
-    {
-        return await _userServices.GetById(id);
+        return await base.GetPagedListByExpression(whereExpression, pageIndex, pageSize, orderByFields);
     }
 
     public async Task<long> Create(SysUser user)
     {
         user.Id = 0;
         user.CreatedTime = DateTime.Now;
-        return await _userServices.Insert(user);
+        return await base.Insert(user);
     }
 
     public async Task<bool> Update(long id, SysUser user)
     {
         user.Id = id;
-        return await _userServices.Update(user);
+        return await base.Update(user);
     }
 
     public async Task<bool> Delete(long id)
     {
-        return await _userServices.DeleteById(id);
+        return await base.DeleteById(id);
     }
 }
