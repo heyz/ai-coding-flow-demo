@@ -46,4 +46,11 @@ public interface ISysUserService : IBaseServices<SysUser>
     /// <param name="id">用户ID</param>
     /// <returns>是否删除成功</returns>
     Task<bool> Delete(long id);
+
+    /// <summary>
+    /// 批量删除用户
+    /// </summary>
+    /// <param name="ids">用户ID数组</param>
+    /// <returns>实际删除的用户数量</returns>
+    Task<int> BatchDelete(long[] ids);
 }

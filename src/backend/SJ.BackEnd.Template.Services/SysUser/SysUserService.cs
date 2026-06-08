@@ -86,6 +86,11 @@ public class SysUserService(IBaseRepository<SysUser> repository) : BaseServices<
         return await base.DeleteById(id);
     }
 
+    public async Task<int> BatchDelete(long[] ids)
+    {
+        return await base.Repository.DeleteByIdsReturnCount(ids.Cast<object>().ToArray());
+    }
+
     /// <summary>
     /// 检查昵称是否已存在
     /// </summary>
