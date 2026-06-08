@@ -56,10 +56,17 @@ from a full URL if provided.
 
 ### Step 1: Fetch Issue from GitHub
 
-Fetch the issue details before any local changes:
+If the user provided a specific issue number (e.g., `#42`, `42`, or a full URL),
+fetch that issue directly. If no issue number was provided, find the smallest
+open issue number from the repository and use it:
 
 ```bash
+# When a specific issue number is given:
 gh issue view <N> --repo <owner/repo> --json number,title,body,url,labels,state,author
+
+# When no issue number is given — find the smallest open issue:
+gh issue list --repo <owner/repo> --state open --json number --jq '.[].number' --limit 100 \
+  | sort -n | head -1
 ```
 
 **Output to capture:**
@@ -68,6 +75,9 @@ gh issue view <N> --repo <owner/repo> --json number,title,body,url,labels,state,
 - Issue body (description)
 - Issue URL
 - Labels (useful for determining branch type — feat/fix/refactor)
+
+If the smallest open issue has already been implemented in the current session
+or is not actionable, skip it and pick the next smallest.
 
 If the issue does not exist or is closed, report and stop. If the issue is
 still open, confirm with the user that this is the intended issue to work on.
@@ -247,8 +257,9 @@ Commit:   <hash>
 PR:       <pr-url>
 ```
 
-## Example
+## Examples
 
+### 指定 Issue 编号
 User says:
 > implement issue #42 — 用户导出功能
 
@@ -264,3 +275,12 @@ User says:
 10. **git-commit**: `feat(export): add user export to Excel and CSV Closes #42`
 11. **git-push**: Pushes to `origin/feat/add-user-export-42`
 12. **create-pr**: PR linking to `Closes #42`
+
+### 自动选取最小 Issue
+
+User says:
+> /github-workflow-ddd 开始工作
+
+1. **list open issues**: 找到最小序号 `#15`（当前 open issues: 15, 16, 17, 20）
+2. **fetch issue**: `gh issue view 15` → "角色管理模块"
+3. 后续步骤同标准流程
