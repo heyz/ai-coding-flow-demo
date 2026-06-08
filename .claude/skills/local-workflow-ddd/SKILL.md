@@ -134,6 +134,18 @@ confirmation.**
 2. Ask the user to review and approve the specs before implementation begins.
    Specs are cheap to revise; code is not.
 
+   **Also inform the user what happens after approval:**
+   ```
+   ✅ 批准后执行：
+      Step 6  implement-specs     — 根据规格编写代码
+      Step 7  创建并运行单元测试    — Xunit，自动创建测试项目
+      Step 8  review-pr-local    — 自动代码审查，生成 review.json
+      Step 9  🔴 再次审查代码      — 根据 review.json 确认/修复
+      Step 10 git-commit          — 提交代码
+      Step 11 git-push            — 推送到远程
+      Step 12 create-pr           — 创建 Pull Request
+   ```
+
    If the user requests spec changes:
    - Update the spec files accordingly
    - Re-present for approval
@@ -247,6 +259,14 @@ confirmation.**
 2. Ask the user to review:
    - Do the code and tests match the approved specs?
    - Are the review findings valid and need fixing?
+
+   **Also inform the user what happens after approval:**
+   ```
+   ✅ 批准后执行：
+      Step 10 git-commit   — 提交代码
+      Step 11 git-push     — 推送到远程
+      Step 12 create-pr    — 创建 Pull Request
+   ```
 
 3. If the user requests code fixes:
    - Apply the fixes based on user direction

@@ -133,6 +133,16 @@ confirmation.**
    - Does the product spec describe the right behavior?
    - Does the tech spec propose a sound implementation approach?
 
+   **Also inform the user what happens after approval:**
+   ```
+   ✅ 批准后执行：
+      Step 6  implement-specs     — 根据规格编写代码
+      Step 7  🔴 再次审查代码      — 确认代码正确
+      Step 8  git-commit          — 提交代码
+      Step 9  git-push            — 推送到远程
+      Step 10 create-pr           — 创建 Pull Request
+   ```
+
 3. Wait for explicit user approval before continuing.
 
    If the user requests spec changes:
@@ -178,6 +188,14 @@ confirmation.**
 2. Ask the user to review:
    - Does the code match the approved specs?
    - Are there any issues with the implementation?
+
+   **Also inform the user what happens after approval:**
+   ```
+   ✅ 批准后执行：
+      Step 8  git-commit   — 提交代码
+      Step 9  git-push     — 推送到远程
+      Step 10 create-pr    — 创建 Pull Request
+   ```
 
 3. Wait for explicit user approval before continuing to commit.
 
