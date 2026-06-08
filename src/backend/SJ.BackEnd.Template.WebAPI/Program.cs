@@ -80,7 +80,7 @@ using (var scope = app.Services.CreateScope())
 {
     var sqlSugarScope = scope.ServiceProvider.GetRequiredService<ISqlSugarClient>() as SqlSugarScope;
     var db = sqlSugarScope!.GetConnectionScope("2");
-    db.CodeFirst.InitTables<SysRole>();
+    db.CodeFirst.InitTables<SysRole, SysUserRole>();
 }
 
 app.Run();
