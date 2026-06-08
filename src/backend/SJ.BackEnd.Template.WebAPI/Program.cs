@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Serilog;
@@ -8,6 +9,7 @@ using SJ.BackEnd.Template.Common.DB;
 using SJ.BackEnd.Template.Extensions;
 using SJ.BackEnd.Template.Extensions.ServiceExtensions;
 using SJ.BackEnd.Template.WebAPI;
+using SJ.BackEnd.Template.WebAPI.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +31,7 @@ builder.Host
 
 builder.Services.AddSingleton(new AppSettings(builder.Configuration));
 builder.Services.AddSqlsugarSetup(builder.Configuration.GetSection("DBS").Get<List<ConfigDbItem>>());
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 builder.Services.AddCors(opts => { 
     opts.AddPolicy("AllowAll", policy => { 
@@ -41,6 +44,9 @@ builder.Services.AddCors(opts => {
 
 builder.Services.AddControllers(o => {
     o.Filters.Add(typeof(GlobalExceptionsFilter));
+    o.Filters.Add(typeof(ValidationFilter));
+}).ConfigureApiBehaviorOptions(o => {
+    o.SuppressModelStateInvalidFilter = true;
 });
 
 builder.Services.Replace(ServiceDescriptor.Transient<IControllerActivator, ServiceBasedControllerActivator>());
@@ -50,12 +56,12 @@ Console.WriteLine(AppSettings.App("Serilog", "MinimumLevel", "Default"));
 
 var app = builder.Build();
 
-// Ä¬ÈÏÎÄ¼þÖÐ¼ä¼þ
+// Ä¬ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½Ð¼ï¿½ï¿½
 DefaultFilesOptions defaultFilesOptions = new();
 defaultFilesOptions.DefaultFileNames.Clear();
 defaultFilesOptions.DefaultFileNames.Add("index.html");
 app.UseDefaultFiles(defaultFilesOptions);
-// ¾²Ì¬ÎÄ¼þÖÐ¼ä¼þ
+// ï¿½ï¿½Ì¬ï¿½Ä¼ï¿½ï¿½Ð¼ï¿½ï¿½
 app.UseStaticFiles();
 
 app.UseCors("AllowAll");
