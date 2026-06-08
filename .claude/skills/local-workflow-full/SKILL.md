@@ -185,6 +185,9 @@ confirmation.**
    - Files changed: summary (git diff --stat)
    - Key implementation highlights: briefly describe what was implemented
 
+2. If a `review.json` was generated (e.g., via manual review), present its
+   findings to the user.
+
 2. Ask the user to review:
    - Does the code match the approved specs?
    - Are there any issues with the implementation?
@@ -214,14 +217,28 @@ must validate the implementation before it enters git history.
 
 ### Step 8: Commit
 
-Invoke the `git-commit` skill.
+Stage all code files plus `review.json`, then invoke the `git-commit` skill.
 
-**Input:** The current staged/unstaged changes on the branch.
+**Commit format (参考 PR #15 风格):**
 
-The commit message will:
-- Follow `type(scope): summary` convention
-- Include `Refs #<N>` or `Fixes #<N>` as appropriate
-- Be atomic and focused
+```text
+feat: 简短中文描述
+
+- **模块** — 变更说明
+- **模块** — 变更说明
+
+Closes #<N>
+```
+
+- Use English `type(scope):` prefix (e.g., `feat:`, `fix:`, `refactor:`)
+- Use Chinese summary and body
+- Include `Closes #<N>` or `Fixes #<N>`
+- List each Change as a bullet with bold module name
+
+```bash
+git add src/...  # code files
+git add review.json
+```
 
 **Output to capture:**
 - Commit hash

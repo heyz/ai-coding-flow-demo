@@ -197,6 +197,9 @@ Invoke the `review-pr-local` skill. This skill:
 **Do NOT** run `git add`, `git commit`, `git push`, `gh`, or GitHub API commands
 during this step. Do NOT modify source files.
 
+**Keep the generated `review.json` — it will be committed in Step 10 along with
+the code, as a permanent review artifact.**
+
 ### Phase 4: Code Review Checkpoint (🔴 MUST WAIT)
 
 ### Step 9: User Review of Code Based on review.json
@@ -223,8 +226,31 @@ confirmation.**
 
 ### Step 10: Commit
 
-Invoke the `git-commit` skill. Include `Closes #<N>` when the issue is fully
-resolved, or `Refs #<N>` for partial/preparatory work.
+Stage all code files plus `review.json`, then invoke the `git-commit` skill.
+
+**Commit format (参考 PR #15 风格):**
+
+```text
+feat: 简短中文描述
+
+- **模块** — 变更说明
+- **模块** — 变更说明
+
+Closes #<N>
+```
+
+The commit message will:
+- Use English `type(scope):` prefix (e.g., `feat:`, `fix:`, `refactor:`)
+- Use Chinese summary and body
+- Include `Closes #<N>` or `Fixes #<N>`
+- List each Change as a bullet with bold module name
+
+```bash
+git add src/...  # code files
+git add review.json
+```
+
+If commit hooks fail, stop and report. Do not use `--no-verify`.
 
 ### Step 11: Push
 

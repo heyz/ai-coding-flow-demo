@@ -1,5 +1,5 @@
 {
   "verdict": "APPROVE",
-  "body": "## Review Summary\n\n角色管理 CRUD 实现与规格一致，代码质量和测试覆盖良好。\n\n### 审查内容\n- **DTOs**: CreateRoleRequest / UpdateRoleRequest — 验证规则完整\n- **Service**: 名称唯一性校验、WhereIF 搜索、主构造函数、Delete 直接委托基类\n- **Controller**: 存在性检查 + 系统角色保护 + 统一 ApiResponse 格式\n- **CodeFirst**: Program.cs InitTables<SysRole> 启动时自动建表\n- **Tests**: 5 个单元测试覆盖创建（唯一/重复）、删除（普通/系统/不存在）\n\n### Security Review\n- ✅ 输入验证：DTO 层使用 Data Annotations（Required, StringLength），全局 ValidationFilter 拦截\n- ✅ 系统角色保护：Controller 层拒绝删除 IsSystem 角色\n- ✅ 名称唯一性：Service 层 QueryByExpression 校验重复\n- ✅ 无秘密/凭据泄露风险\n- ✅ 无 SQL 注入风险（SqlSugar ORM 参数化查询）\n\n### 结论\n未发现阻塞性问题。",
+  "body": "## Review Summary\n\n权限模块实现完整，树形结构设计合理。\n\n### Changes\n- **SysPermission** — 权限实体（sys_permission, Tenant 2）含 parentId 树形结构\n- **DTOs** — Create/UpdatePermissionRequest 含 [Required], [RegularExpression(type)]\n- **Service** — 编码唯一性、子节点删除保护、GetTree 全量查询\n- **Controller** — 5 个端点 /permission，存在性校验完整\n- **CodeFirst** — InitTables 已扩展\n- **Tests** — 5 个测试覆盖创建、删除、树形查询\n\n### 结论\n未发现阻塞性问题。",
   "comments": []
 }
