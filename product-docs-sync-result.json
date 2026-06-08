@@ -1,0 +1,17 @@
+{
+  "docs_update": "required",
+  "reason": "Initial project: no existing product documentation. Creating authoritative docs covering API endpoints, data models, response format, validation, and project architecture.",
+  "affected_docs": [
+    "docs/product/raw/project-overview.md",
+    "docs/product/raw/api-sysuser.md",
+    "docs/product/raw/data-models.md",
+    "docs/product/raw/response-format.md",
+    "docs/product/raw/validation-rules.md"
+  ],
+  "source_context": [
+    "Codebase analysis",
+    "CLAUDE.md",
+    "Specs in specs/ directory"
+  ],
+  "proposed_patch": "Create initial product documentation under docs/product/raw/ covering API reference, data models, response conventions, validation rules, and project architecture."
+}

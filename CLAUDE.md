@@ -84,6 +84,11 @@ public class TranService(IUnitOfWorkManage db, IBaseRepository<LlmConfig> config
 - Base class constructor arguments are passed directly from the primary constructor parameter list (e.g. `BaseServices<SysUser>(repository)`).
 - Exceptions: classes that assign constructor parameters to `static` members (use explicit constructor instead).
 
+### Documentation Language
+- All product documentation under `docs/product/` MUST be written in **Chinese**.
+- This applies to both initial creation and subsequent sync/update PRs.
+- Spec files under `specs/` should also use Chinese for user-facing descriptions and error messages, matching the codebase convention.
+
 ### WhereIF Extension Method
 - `SJ.BackEnd.Template.Common.Extensions` provides `WhereIF` extension for `Expression<Func<T, bool>>`, modeled after SqlSugar's `WhereIF` semantics.
 - Signature: `expr.WhereIF(bool condition, Expression<Func<T, bool>> predicate)` — appends `predicate` via AND only when `condition` is true.
