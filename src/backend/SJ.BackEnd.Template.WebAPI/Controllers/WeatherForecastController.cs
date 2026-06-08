@@ -6,30 +6,23 @@ namespace SJ.BackEnd.Template.WebAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class WeatherForecastController(ILogger<WeatherForecastController> logger, IBaseServices<LlmConfig> configSrv, ITranService tranSrv) : ControllerBase
     {
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<WeatherForecastController> _logger = logger;
 
-        private readonly IBaseServices<LlmConfig> _configSrv;
+        private readonly IBaseServices<LlmConfig> _configSrv = configSrv;
 
-        private readonly ITranService _tranSrv;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IBaseServices<LlmConfig> configSrv, ITranService tranSrv)
-        {
-            _logger = logger;
-            _configSrv = configSrv;
-            _tranSrv = tranSrv;
-        }
+        private readonly ITranService _tranSrv = tranSrv;
 
         [HttpGet]
         public async Task<IEnumerable<WeatherForecast>> Get()
         {
-            throw new Exception("²âÊÔÒì³£");
+            throw new Exception("æµ‹è¯•å¼‚å¸¸");
             _logger.LogInformation("WeatherForecastController Get");
             //var configs = _configSrv.Query().Result;
 

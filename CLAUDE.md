@@ -67,6 +67,42 @@ WebAPI → Extensions → Repository → IRepository → Model
 - `IBaseServices<TEntity>` / `IBaseRepository<TEntity>` provide full CRUD + pagination + multi-table join queries
 - `PageModel<T>` with `ConvertTo<TOut>()` for Mapster-based DTO mapping
 
+### Primary Constructor Convention
+- Classes with **≤3 constructor parameters and no extra constructor body logic** must use C# 12 primary constructor syntax.
+- Primary constructor parameters are stored as field initializers when the class needs a named backing field:
+
+```csharp
+// Good — primary constructor, ≤3 params, fields initialized from params
+public class TranService(IUnitOfWorkManage db, IBaseRepository<LlmConfig> configRepo) : ITranService
+{
+    private readonly IUnitOfWorkManage _uow = db;
+    private readonly IBaseRepository<LlmConfig> _configRepo = configRepo;
+    ...
+}
+```
+
+- Base class constructor arguments are passed directly from the primary constructor parameter list (e.g. `BaseServices<SysUser>(repository)`).
+- Exceptions: classes that assign constructor parameters to `static` members (use explicit constructor instead).
+
+### WhereIF Extension Method
+- `SJ.BackEnd.Template.Common.Extensions` provides `WhereIF` extension for `Expression<Func<T, bool>>`, modeled after SqlSugar's `WhereIF` semantics.
+- Signature: `expr.WhereIF(bool condition, Expression<Func<T, bool>> predicate)` — appends `predicate` via AND only when `condition` is true.
+- Prefer WhereIF over explicit `if` + expression reassignment:
+
+```csharp
+// Good — declarative, single expression
+Expression<Func<SysUser, bool>> whereExpression = _ => true;
+whereExpression = whereExpression.WhereIF(!string.IsNullOrWhiteSpace(keyword),
+    u => u.RealName.Contains(keyword) || u.Nickname.Contains(keyword));
+
+// Avoid — imperative if-block
+Expression<Func<SysUser, bool>> whereExpression = _ => true;
+if (!string.IsNullOrWhiteSpace(keyword))
+{
+    whereExpression = u => u.RealName.Contains(keyword) || u.Nickname.Contains(keyword);
+}
+```
+
 ## Adding a New Entity & CRUD
 
 1. Add entity class in `Model/Entities/` with `[SugarTable]`, `[Tenant]`, and `[SugarColumn]` attributes
