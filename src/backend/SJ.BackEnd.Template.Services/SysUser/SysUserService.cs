@@ -9,8 +9,7 @@
 * ==============================================================================*/
 #endregion
 
-using SJ.BackEnd.Template.IServices;
-using SJ.BackEnd.Template.Model;
+using SJ.BackEnd.Template.Model.Dtos.SysUser;
 
 namespace SJ.BackEnd.Template.Services;
 
@@ -33,21 +32,78 @@ public class SysUserService : BaseServices<SysUser>, ISysUserService
         return await base.GetPagedListByExpression(whereExpression, pageIndex, pageSize, orderByFields);
     }
 
-    public async Task<long> Create(SysUser user)
+    public async Task<CreateUserResponse?> Create(CreateUserRequest request)
     {
-        user.Id = 0;
-        user.CreatedTime = DateTime.Now;
-        return await base.Insert(user);
+        // 昵称唯一性校验
+        if (!string.IsNullOrWhiteSpace(request.Nickname))
+        {
+            var exists = await IsNicknameExists(request.Nickname);
+            if (exists)
+                return null;
+        }
+
+        var user = new SysUser
+        {
+            Id = 0,
+            Nickname = request.Nickname,
+            RealName = request.RealName,
+            Gender = request.Gender,
+            BirthDate = request.BirthDate,
+            CreatedTime = DateTime.Now
+        };
+
+        var newId = await base.Insert(user);
+        var created = await base.GetById(newId);
+
+        return new CreateUserResponse
+        {
+            Id = created.Id,
+            Nickname = created.Nickname,
+            RealName = created.RealName,
+            Gender = created.Gender,
+            BirthDate = created.BirthDate,
+            CreatedTime = created.CreatedTime
+        };
     }
 
-    public async Task<bool> Update(long id, SysUser user)
+    public async Task<bool> Update(long id, UpdateUserRequest request)
     {
-        user.Id = id;
+        // 昵称唯一性校验（排除当前用户）
+        if (!string.IsNullOrWhiteSpace(request.Nickname))
+        {
+            var exists = await IsNicknameExists(request.Nickname, id);
+            if (exists)
+                return false;
+        }
+
+        var user = new SysUser
+        {
+            Id = id,
+            Nickname = request.Nickname,
+            RealName = request.RealName,
+            Gender = request.Gender,
+            BirthDate = request.BirthDate
+        };
+
         return await base.Update(user);
     }
 
     public async Task<bool> Delete(long id)
     {
         return await base.DeleteById(id);
+    }
+
+    /// <summary>
+    /// 检查昵称是否已存在
+    /// </summary>
+    /// <param name="nickname">昵称</param>
+    /// <param name="excludeUserId">排除的用户ID（修改时排除自身）</param>
+    /// <returns>昵称是否已被占用</returns>
+    private async Task<bool> IsNicknameExists(string nickname, long? excludeUserId = null)
+    {
+        var users = await base.QueryByExpression(u => u.Nickname == nickname);
+        if (excludeUserId.HasValue)
+            return users.Any(u => u.Id != excludeUserId.Value);
+        return users.Any();
     }
 }

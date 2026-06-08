@@ -10,6 +10,7 @@
 #endregion
 
 using SJ.BackEnd.Template.Model;
+using SJ.BackEnd.Template.Model.Dtos.SysUser;
 
 namespace SJ.BackEnd.Template.IServices;
 
@@ -27,17 +28,17 @@ public interface ISysUserService : IBaseServices<SysUser>
     /// <summary>
     /// 创建用户
     /// </summary>
-    /// <param name="user">用户信息</param>
-    /// <returns>新记录的雪花ID</returns>
-    Task<long> Create(SysUser user);
+    /// <param name="request">创建用户请求</param>
+    /// <returns>新用户信息，昵称重复时返回 null</returns>
+    Task<CreateUserResponse?> Create(CreateUserRequest request);
 
     /// <summary>
     /// 更新用户
     /// </summary>
     /// <param name="id">用户ID</param>
-    /// <param name="user">用户信息</param>
-    /// <returns>是否更新成功</returns>
-    Task<bool> Update(long id, SysUser user);
+    /// <param name="request">修改用户请求</param>
+    /// <returns>是否更新成功（昵称重复或用户不存在时返回 false）</returns>
+    Task<bool> Update(long id, UpdateUserRequest request);
 
     /// <summary>
     /// 删除用户
