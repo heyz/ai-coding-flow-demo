@@ -8,8 +8,10 @@ using SJ.BackEnd.Template.Common;
 using SJ.BackEnd.Template.Common.DB;
 using SJ.BackEnd.Template.Extensions;
 using SJ.BackEnd.Template.Extensions.ServiceExtensions;
+using SJ.BackEnd.Template.Model;
 using SJ.BackEnd.Template.WebAPI;
 using SJ.BackEnd.Template.WebAPI.Validators;
+using SqlSugar;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,5 +74,13 @@ app.UseSerilogRequestLogging();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// CodeFirst: 自动创建或更新数据表
+using (var scope = app.Services.CreateScope())
+{
+    var sqlSugarScope = scope.ServiceProvider.GetRequiredService<ISqlSugarClient>() as SqlSugarScope;
+    var db = sqlSugarScope!.GetConnectionScope("2");
+    db.CodeFirst.InitTables<SysRole>();
+}
 
 app.Run();
