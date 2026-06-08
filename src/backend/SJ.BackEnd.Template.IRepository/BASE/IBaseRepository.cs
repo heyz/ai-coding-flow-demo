@@ -346,5 +346,12 @@ public interface IBaseRepository<TEntity> where TEntity : class
     /// <returns>是否删除成功</returns>
     Task<bool> DeleteByIds(object[] ids);
 
+    /// <summary>
+    /// 根据主键 ID 数组批量删除并返回实际删除行数
+    /// </summary>
+    /// <param name="ids">主键值数组</param>
+    /// <returns>实际删除的行数</returns>
+    Task<int> DeleteByIdsReturnCount(object[] ids);
+
     #endregion
 }

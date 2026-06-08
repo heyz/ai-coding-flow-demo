@@ -77,4 +77,16 @@ public class SysUserController(ISysUserService sysUserService) : ControllerBase
         var result = await _sysUserService.Delete(id);
         return ApiResponse<bool>.Success("删除成功", result);
     }
+
+    /// <summary>
+    /// 批量删除用户
+    /// </summary>
+    /// <param name="request">批量删除请求</param>
+    /// <returns>删除成功的数量</returns>
+    [HttpDelete("batch")]
+    public async Task<ApiResponse<int>> BatchDelete([FromBody] BatchDeleteRequest request)
+    {
+        var count = await _sysUserService.BatchDelete(request.ids);
+        return ApiResponse<int>.Success($"成功删除{count}条记录", count);
+    }
 }

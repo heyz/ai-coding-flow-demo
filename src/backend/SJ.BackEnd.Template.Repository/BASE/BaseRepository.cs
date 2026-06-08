@@ -267,5 +267,10 @@ public class BaseRepository<TEntity>(IUnitOfWorkManage uowMgr) : IBaseRepository
         return await _db.Deleteable<TEntity>().In(ids).ExecuteCommandHasChangeAsync();
     }
 
+    public async Task<int> DeleteByIdsReturnCount(object[] ids)
+    {
+        return await _db.Deleteable<TEntity>().In(ids).ExecuteCommandAsync();
+    }
+
     #endregion
 }
