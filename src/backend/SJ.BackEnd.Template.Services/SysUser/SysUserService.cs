@@ -9,24 +9,17 @@
 * ==============================================================================*/
 #endregion
 
+using SJ.BackEnd.Template.Common.Extensions;
 using SJ.BackEnd.Template.Model.Dtos.SysUser;
 
 namespace SJ.BackEnd.Template.Services;
 
-public class SysUserService : BaseServices<SysUser>, ISysUserService
+public class SysUserService(IBaseRepository<SysUser> repository) : BaseServices<SysUser>(repository), ISysUserService
 {
-    public SysUserService(IBaseRepository<SysUser> repository) : base(repository)
-    {
-    }
-
     public async Task<PageModel<SysUser>> GetPagedList(int pageIndex, int pageSize, string? keyword)
     {
         Expression<Func<SysUser, bool>> whereExpression = _ => true;
-
-        if (!string.IsNullOrWhiteSpace(keyword))
-        {
-            whereExpression = u => u.RealName.Contains(keyword) || u.Nickname.Contains(keyword);
-        }
+        whereExpression = whereExpression.WhereIF(!string.IsNullOrWhiteSpace(keyword), u => u.RealName.Contains(keyword) || u.Nickname.Contains(keyword));
 
         string orderByFields = "Id desc";
         return await base.GetPagedListByExpression(whereExpression, pageIndex, pageSize, orderByFields);

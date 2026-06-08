@@ -1,4 +1,4 @@
-﻿#region  <<版本注释>>
+#region  <<版本注释>>
 /* ==============================================================================
 // <copyright file="TranService.cs" company="Shiji.BO.CS">
 // Copyright (c) SJ.BO.CS. All rights reserved.
@@ -11,16 +11,10 @@
 
 namespace SJ.BackEnd.Template.Services;
 
-public class TranService : ITranService
+public class TranService(IUnitOfWorkManage db, IBaseRepository<LlmConfig> configRepo) : ITranService
 {
-    private readonly IUnitOfWorkManage _uow;
-    private readonly IBaseRepository<LlmConfig> _configRepo;
-
-    public TranService(IUnitOfWorkManage db, IBaseRepository<LlmConfig> configRepo)
-    {
-        _uow = db;
-        _configRepo = configRepo;
-    }
+    private readonly IUnitOfWorkManage _uow = db;
+    private readonly IBaseRepository<LlmConfig> _configRepo = configRepo;
 
     public async Task<bool> TestTran01()
     {
@@ -59,7 +53,7 @@ public class TranService : ITranService
             _uow.RollbackTran();
             throw;
         }
-        
+
     }
 
 
@@ -100,7 +94,7 @@ public class TranService : ITranService
             // throw  new Exception("03") ;
             return false;
         }
-       
+
     }
 
     public async Task<bool> TestTran()
@@ -144,6 +138,6 @@ public class TranService : ITranService
 
             return false;
         }
-       
+
     }
 }

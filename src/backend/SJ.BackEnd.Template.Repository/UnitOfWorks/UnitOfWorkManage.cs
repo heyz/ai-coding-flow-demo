@@ -1,4 +1,4 @@
-﻿#region  <<版本注释>>
+#region  <<版本注释>>
 /* ==============================================================================
 // <copyright file="UnitOfWorkManage.cs" company="Shiji.BO.CS">
 // Copyright (c) SJ.BO.CS. All rights reserved.
@@ -12,22 +12,15 @@
 
 namespace SJ.BackEnd.Template.Repository;
 
-public class UnitOfWorkManage : IUnitOfWorkManage
+public class UnitOfWorkManage(ISqlSugarClient sqlSugarClient, ILogger<UnitOfWorkManage> logger) : IUnitOfWorkManage
 {
-    private readonly ILogger<UnitOfWorkManage> _logger;
-    private readonly ISqlSugarClient _sqlSugarClient;
-    
+    private readonly ILogger<UnitOfWorkManage> _logger = logger;
+    private readonly ISqlSugarClient _sqlSugarClient = sqlSugarClient;
+
 
     private int _tranCount { get; set; }
     public int TranCount => _tranCount;
     public readonly ConcurrentStack<string> TranStack = new();
-
-    public UnitOfWorkManage(ISqlSugarClient sqlSugarClient, ILogger<UnitOfWorkManage> logger)
-    {
-        _sqlSugarClient = sqlSugarClient;
-        _logger = logger;
-        _tranCount = 0;
-    }
 
     /// <summary>
     /// 获取DB，保证唯一性
